@@ -198,14 +198,11 @@
   .about-portrait:hover img{transform:scale(1.04);}
   .about-portrait.no-img::after{content:attr(data-label); font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.04em; color:var(--muted-dim); text-transform:uppercase; text-align:center; padding:0 20px;}
   .about-text{max-width:680px;}
-  .lab-gallery{display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:118px; gap:12px; margin-top:36px;}
-  @media (max-width:720px){ .lab-gallery{grid-template-columns:repeat(2,1fr); grid-auto-rows:130px;} }
-  .lab-shot{position:relative; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); background:var(--panel-2); display:flex; align-items:center; justify-content:center;}
-  .lab-shot.big{grid-column:span 2; grid-row:span 2;}
-  .lab-shot.wide{grid-column:span 2;}
-  .lab-shot.tall{grid-row:span 2;}
-  @media (max-width:720px){ .lab-shot.big{grid-column:span 2; grid-row:span 2;} .lab-shot.wide{grid-column:span 2;} .lab-shot.tall{grid-row:span 1;} }
-  .lab-shot img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease;}
+  .lab-gallery{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:36px;}
+  @media (max-width:600px){ .lab-gallery{grid-template-columns:1fr;} }
+  .lab-shot{position:relative; aspect-ratio:4/3; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); background:var(--panel-2); display:flex; align-items:center; justify-content:center;}
+  .lab-shot.big, .lab-shot.wide, .lab-shot.tall{grid-column:auto; grid-row:auto;}
+  .lab-shot img{width:100%; height:100%; object-fit:cover; object-position:var(--pos, center); display:block; transition:transform .5s ease;}
   .lab-shot:hover img{transform:scale(1.05);}
   .lab-shot.no-img::after{content:attr(data-label); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.04em; color:var(--muted-dim); text-transform:uppercase; text-align:center; padding:0 14px; line-height:1.5;}
   .lab-cap{position:absolute; left:0; right:0; bottom:0; padding:8px 12px; background:linear-gradient(to top, rgba(14,22,38,0.72), transparent); color:#fff; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase;}
@@ -550,10 +547,10 @@
         Click any tile to open the full pop-out gallery. To change/add images, edit GALLERIES.intro.
       -->
       <div class="lab-gallery">
-        <div class="lab-shot big"  data-gallery="intro" data-index="0" data-label="Loading…"></div>
-        <div class="lab-shot wide" data-gallery="intro" data-index="1" data-label="Loading…"></div>
-        <div class="lab-shot"      data-gallery="intro" data-index="2" data-label="Loading…"></div>
-        <div class="lab-shot"      data-gallery="intro" data-index="3" data-label="Loading…"></div>
+        <div class="lab-shot big"  data-gallery="intro" data-index="0" data-pos="center" data-label="Loading…"></div>
+        <div class="lab-shot wide" data-gallery="intro" data-index="1" data-pos="center" data-label="Loading…"></div>
+        <div class="lab-shot"      data-gallery="intro" data-index="2" data-pos="center" data-label="Loading…"></div>
+        <div class="lab-shot"      data-gallery="intro" data-index="3" data-pos="center" data-label="Loading…"></div>
       </div>
     </div>
   </section>
@@ -678,18 +675,18 @@
 
         <article class="proj-card" data-tags="perception navigation">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — Dead-Reckoning Navigation"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="ekf"></div></div>
           <div class="proj-body">
-            <div class="proj-top"><h3>Dead-Reckoning Navigation — IMU + Magnetometer Fusion</h3></div>
-            <div class="proj-tags"><span class="proj-tag">VectorNav VN-100</span><span class="proj-tag">Complementary Filter</span><span class="proj-tag">GPS / UTM</span><span class="proj-tag">Sensor Fusion</span></div>
-            <p class="proj-desc">Vehicle heading and trajectory estimation on real Boston driving data (EECE 5554, Northeastern). Corrected hard- and soft-iron magnetometer distortion from a circle-drive calibration, fused the drift-free magnetometer heading with integrated gyro rate through a complementary filter (α = 0.98), and estimated forward velocity from high-pass-filtered accelerometer readings against a GPS/UTM baseline — then integrated heading and velocity into an ENU dead-reckoned track and characterized how quickly an unaided IMU diverges.</p>
-            <div class="proj-metrics"><span><b>α = 0.98</b> fusion</span><span><b>VN-100</b> IMU</span><span><b>GPS-referenced</b></span></div>
+            <div class="proj-top"><h3>Vehicle State Estimation — IMU + Magnetometer Fusion</h3></div>
+            <div class="proj-tags"><span class="proj-tag">VectorNav VN-100</span><span class="proj-tag">EKF</span><span class="proj-tag">Complementary Filter</span><span class="proj-tag">GPS / UTM</span><span class="proj-tag">Sensor Fusion</span></div>
+            <p class="proj-desc">Heading and velocity estimation on real Boston driving data (EECE 5554, Northeastern). Corrected hard- and soft-iron magnetometer distortion from a circle-drive calibration, then fused the drift-free magnetometer heading with integrated gyro rate through both a complementary filter (α = 0.98) and an extended Kalman filter (EKF), and estimated forward velocity from high-pass-filtered accelerometer readings against a GPS/UTM baseline — characterizing how quickly an unaided IMU diverges.</p>
+            <div class="proj-metrics"><span><b>EKF</b> + comp. filter</span><span><b>VN-100</b> IMU</span><span><b>GPS-referenced</b></span></div>
           </div>
         </article>
 
         <article class="proj-card" data-tags="perception">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — Trajectory Prediction"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="trajectory"></div></div>
           <div class="proj-body">
             <div class="proj-top">
               <h3>Real-Time Pedestrian Trajectory Prediction</h3>
@@ -745,7 +742,7 @@
 
         <article class="proj-card" data-tags="mechanical">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — RoboCon 2021"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="robocon"></div></div>
           <div class="proj-body">
             <div class="proj-top"><h3>RoboCon 2021 — Team Anonymous</h3></div>
             <div class="proj-tags"><span class="proj-tag">Pneumatics</span><span class="proj-tag">Mechanical Design</span></div>
@@ -836,6 +833,7 @@
             <p>Lifting both pose representation (SMPL pose + shape via HMR2.0 / WHAM) and trajectory output to full 3D world coordinates. Investigating whether kinematic features — body yaw, shoulder–pelvis decoupling, centre-of-mass lean — generalise better than raw joint coordinates under noisy estimated poses, and whether offline ADE/FDE gains translate into closed-loop safety gains in robot navigation.</p>
             <p class="rp-meta">Literature review complete · experimental design in progress</p>
             <div class="rp-tags"><span>SMPL</span><span>HMR2.0</span><span>WHAM</span><span>Trajectory Prediction</span></div>
+            <a class="rp-link" href="reports/pgtp-net-report.pdf" target="_blank" rel="noopener">Read the report ↗</a>
           </div>
         </div>
         <div class="rp-card">
@@ -1004,7 +1002,7 @@
 
         <div class="award-card">
           <div class="award-photo" data-label="Add photo — IAAC Gold Honour">
-            <img src="images/iaac-gold-2019.jpg" alt="International Astronomy & Astrophysics Competition — Gold Honour" loading="lazy" onerror="this.style.display='none'; this.closest('.award-photo').classList.add('no-img');">
+            <img src="images/goldhonour.png" alt="International Astronomy & Astrophysics Competition — Gold Honour" loading="lazy" onerror="this.style.display='none'; this.closest('.award-photo').classList.add('no-img');">
           </div>
           <div class="award-body">
             <h3>Gold Honour</h3>
@@ -1036,19 +1034,8 @@
         </div>
 
         <div class="award-card">
-          <div class="award-photo" data-label="Add photo — Swadeshi Microprocessor Challenge">
-            <img src="images/swadeshi-microprocessor-2021.jpg" alt="Swadeshi Microprocessor Challenge" loading="lazy" onerror="this.style.display='none'; this.closest('.award-photo').classList.add('no-img');">
-          </div>
-          <div class="award-body">
-            <h3>Quarter-Finalist — Swadeshi Microprocessor Challenge</h3>
-            <div class="award-org">MeitY · Govt. of India</div>
-            <div class="award-year">2021</div>
-          </div>
-        </div>
-
-        <div class="award-card">
           <div class="award-photo" data-label="Add photo — Thrivers of Leadership">
-            <img src="images/aiesec-thrivers-2021.jpg" alt="Thrivers of Leadership Body" loading="lazy" onerror="this.style.display='none'; this.closest('.award-photo').classList.add('no-img');">
+            <img src="images/thrivers.png" alt="Thrivers of Leadership Body" loading="lazy" onerror="this.style.display='none'; this.closest('.award-photo').classList.add('no-img');">
           </div>
           <div class="award-body">
             <h3>Thrivers of Leadership Body — awarded twice</h3>
@@ -1206,11 +1193,15 @@
     flipkart:     [ { t:'yt', s:'kUKNIRWzeSI', cap:'Flipkart GRiD 2023' } ],
     ur5:          [ { t:'yt', s:'6-ZP9ciBk3w', cap:'UR5 kinematics' } ],
     stewart:      [ { t:'yt', s:'ell-3qGeZwA', cap:'Stewart platform' } ],
+    trajectory: [
+      { t:'img', s:'https://raw.githubusercontent.com/priyankalakariya/PGTP-Net/main/assets/PoseGudedTrajectory_arch.jpg', cap:'Pose-guided trajectory — architecture' },
+      { t:'img', s:'https://raw.githubusercontent.com/priyankalakariya/PGTP-Net/main/assets/Demo_Trajectory_prediction.gif', cap:'Demo — trajectory prediction' }
+    ],
     sfm: [
-      { t:'img', s:'images/inlier.png',                        cap:'Inlier matches (RANSAC)' },
-      { t:'img', s:'images/matplotlib.png',                    cap:'Reprojection / reconstruction plot' },
-      { t:'vid', s:'videos/derivative_result%20%281%29.mp4',   cap:'Derivative result' },
-      { t:'vid', s:'videos/meshlab.mp4',                       cap:'MeshLab reconstruction' }
+      { t:'img', s:'images/inlier.png',            cap:'Inlier matches (RANSAC)' },
+      { t:'img', s:'images/matplotlib.png',        cap:'Reprojection / reconstruction plot' },
+      { t:'vid', s:'videos/derivative_result.mp4',        cap:'Derivative result' },
+      { t:'vid', s:'videos/meshlab.mp4',           cap:'MeshLab reconstruction' }
     ],
     linefollower: [
       { t:'img', s:'images/facilitator1.jpeg', cap:'Facilitation' },
@@ -1218,8 +1209,13 @@
       { t:'img', s:'images/facilitator3.jpeg', cap:'Facilitation' },
       { t:'img', s:'images/RoboRace',          cap:'RoboRace' }
     ],
-    obstacle:     [ { t:'vid', s:'videos/Obstacle%20sensor%20checking.mp4', cap:'Obstacle sensing' } ]
-  };
+    obstacle:     [ { t:'vid', s:'videos/Obstacle-sensor-checking.mp4', cap:'Obstacle sensing' } ],
+    robocon:      [ { t:'img', s:'images/robocon', cap:'RoboCon — Team Anonymous' } ],
+    ekf: [
+      { t:'img', s:'images/loop-closure', cap:'Loop closure' },
+      { t:'img', s:'images/ekf-report',   cap:'Project report' }
+    ]
+  }
 
   // Smart <img>: tries the given path, then common extensions, then reports failure.
   const IMG_EXTS = ['', '.jpg', '.jpeg', '.png', '.JPG', '.PNG', '.webp'];
@@ -1360,7 +1356,9 @@
     const item = (GALLERIES[key] || [])[idx];
     tile.classList.remove('no-img');
     if (item && item.t === 'img'){
-      tile.appendChild(smartImg(item.s, '', item.cap, () => { tile.classList.add('no-img'); tile.setAttribute('data-label','Add photo'); }));
+      const im = smartImg(item.s, '', item.cap, () => { tile.classList.add('no-img'); tile.setAttribute('data-label','Add photo'); });
+      im.style.objectPosition = tile.getAttribute('data-pos') || 'center';
+      tile.appendChild(im);
     } else {
       tile.classList.add('no-img'); tile.setAttribute('data-label','Add photo');
     }
