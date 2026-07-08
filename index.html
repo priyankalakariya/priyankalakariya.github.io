@@ -198,10 +198,12 @@
   .about-portrait:hover img{transform:scale(1.04);}
   .about-portrait.no-img::after{content:attr(data-label); font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.04em; color:var(--muted-dim); text-transform:uppercase; text-align:center; padding:0 20px;}
   .about-text{max-width:680px;}
-  .lab-gallery{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:36px;}
-  @media (max-width:600px){ .lab-gallery{grid-template-columns:1fr;} }
-  .lab-shot{position:relative; aspect-ratio:4/3; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); background:var(--panel-2); display:flex; align-items:center; justify-content:center;}
-  .lab-shot.big, .lab-shot.wide, .lab-shot.tall{grid-column:auto; grid-row:auto;}
+  .lab-gallery{display:flex; gap:14px; margin-top:36px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:10px; -webkit-overflow-scrolling:touch;}
+  .lab-gallery::-webkit-scrollbar{height:8px;}
+  .lab-gallery::-webkit-scrollbar-thumb{background:var(--line); border-radius:20px;}
+  @media (max-width:600px){ .lab-gallery{gap:12px;} }
+  .lab-shot{flex:0 0 clamp(210px, 24vw, 258px); scroll-snap-align:start; position:relative; aspect-ratio:4/3; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); background:var(--panel-2); display:flex; align-items:center; justify-content:center;}
+  .lab-shot.big, .lab-shot.wide, .lab-shot.tall{flex:0 0 clamp(210px, 24vw, 258px);}
   .lab-shot img{width:100%; height:100%; object-fit:cover; object-position:var(--pos, center); display:block; transition:transform .5s ease;}
   .lab-shot:hover img{transform:scale(1.05);}
   .lab-shot.no-img::after{content:attr(data-label); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.04em; color:var(--muted-dim); text-transform:uppercase; text-align:center; padding:0 14px; line-height:1.5;}
@@ -636,7 +638,7 @@
 
         <article class="proj-card" data-tags="perception navigation">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — Drone SLAM"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="gpsnav"></div></div>
           <div class="proj-body">
             <div class="proj-top">
               <h3>GPS-Denied Drone SLAM for Underground Mine Mapping</h3>
@@ -650,7 +652,7 @@
 
         <article class="proj-card" data-tags="perception navigation">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — Visual Navigation"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="visnav"></div></div>
           <div class="proj-body">
             <div class="proj-top">
               <h3>Autonomous Visual Navigation in Dynamic Environments</h3>
@@ -677,7 +679,7 @@
           <div class="proj-flap"></div>
           <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="ekf"></div></div>
           <div class="proj-body">
-            <div class="proj-top"><h3>Vehicle State Estimation — IMU + Magnetometer Fusion</h3></div>
+            <div class="proj-top"><h3>Vehicle State Estimation</h3></div>
             <div class="proj-tags"><span class="proj-tag">VectorNav VN-100</span><span class="proj-tag">EKF</span><span class="proj-tag">Complementary Filter</span><span class="proj-tag">GPS / UTM</span><span class="proj-tag">Sensor Fusion</span></div>
             <p class="proj-desc">Heading and velocity estimation on real Boston driving data (EECE 5554, Northeastern). Corrected hard- and soft-iron magnetometer distortion from a circle-drive calibration, then fused the drift-free magnetometer heading with integrated gyro rate through both a complementary filter (α = 0.98) and an extended Kalman filter (EKF), and estimated forward velocity from high-pass-filtered accelerometer readings against a GPS/UTM baseline — characterizing how quickly an unaided IMU diverges.</p>
             <div class="proj-metrics"><span><b>EKF</b> + comp. filter</span><span><b>VN-100</b> IMU</span><span><b>GPS-referenced</b></span></div>
@@ -1209,7 +1211,9 @@
       { t:'img', s:'images/facilitator3.jpeg', cap:'Facilitation' },
       { t:'img', s:'images/RoboRace',          cap:'RoboRace' }
     ],
-    obstacle:     [ { t:'vid', s:'videos/Obstacle-sensor-checking.mp4', cap:'Obstacle sensing' } ],
+    obstacle:     [ { t:'vid', s:'videos/Obstacledetection.mp4', cap:'Obstacle sensing' } ],
+    visnav:       [ { t:'img', s:'https://raw.githubusercontent.com/priyankalakariya/VisNav/main/media/demo.gif', cap:'VisNav — navigation demo' } ],
+    gpsnav:       [ { t:'vid', s:'videos/gpsnav.mp4', cap:'GPS-denied navigation' } ],
     robocon:      [ { t:'img', s:'images/robocon', cap:'RoboCon — Team Anonymous' } ],
     ekf: [
       { t:'img', s:'images/loop-closure', cap:'Loop closure' },
@@ -1226,7 +1230,7 @@
     img.loading = 'lazy';
     let i = 0;
     img.addEventListener('error', function next(){
-      if (i >= IMG_EXTS.length){ if (onFail) onFail(); return; }
+      if (i >= IMG_EXTS.length){ img.style.display='none'; if (onFail) onFail(); return; }
       img.src = base + IMG_EXTS[i++];
     });
     img.src = base + IMG_EXTS[i++];
@@ -1255,7 +1259,7 @@
     el.innerHTML = '';
     const scrim = document.createElement('div'); scrim.className = 'pv-scrim';
     if (first.t === 'img'){
-      el.appendChild(smartImg(first.s, 'pv', first.cap, () => { el.classList.add('no-media'); el.setAttribute('data-label','Add image'); }));
+      el.appendChild(smartImg(first.s, 'pv', first.cap, () => { el.innerHTML=''; el.classList.add('no-media'); el.setAttribute('data-label','Add image'); }));
     } else if (first.t === 'vid'){
       const v = document.createElement('video'); v.className = 'pv'; v.muted = true; v.playsInline = true;
       v.preload = 'metadata'; v.src = first.s + '#t=0.1'; el.appendChild(v);
