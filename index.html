@@ -447,6 +447,7 @@
   .contact{padding:78px 0 0;}
   .contact-inner{text-align:center; max-width:620px; margin:0 auto 56px; background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:48px 32px; box-shadow:0 24px 60px -40px rgba(14,22,38,0.4);}
   .contact h2{font-weight:700; font-size:clamp(27px,4vw,40px); margin:0 0 14px; letter-spacing:-0.02em;}
+  .contact h2.contact-big{font-size:clamp(42px,6.5vw,74px); line-height:1.02; margin:0 0 18px;}
   .contact p{color:var(--muted); font-size:15.5px; margin:0 0 26px;}
   .contact-links{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
   footer{border-top:1px solid var(--line-soft); padding:20px 0;}
@@ -761,6 +762,7 @@
             <div class="proj-tags"><span class="proj-tag">Arduino</span><span class="proj-tag">IoT</span><span class="proj-tag">Vat Photopolymerization</span></div>
             <p class="proj-desc">Vat photopolymerization printer built around an Arduino Uno, 30 UV LEDs, and a ball-screw Z-stage, with IoT-based remote monitoring to adjust print parameters in real time — dialling in exposure timing and layer stepping to hit fine resolution at a fraction of commercial SLA cost.</p>
             <div class="proj-metrics"><span><b>50-micron</b> resolution</span><span><b>60%</b> cost ↓</span></div>
+            <a class="rp-link" href="steriolithography.pdf" target="_blank" rel="noopener" style="display:inline-block; margin-top:12px;">Read the report ↗</a>
           </div>
         </article>
 
@@ -835,7 +837,7 @@
             <p>Lifting both pose representation (SMPL pose + shape via HMR2.0 / WHAM) and trajectory output to full 3D world coordinates. Investigating whether kinematic features — body yaw, shoulder–pelvis decoupling, centre-of-mass lean — generalise better than raw joint coordinates under noisy estimated poses, and whether offline ADE/FDE gains translate into closed-loop safety gains in robot navigation.</p>
             <p class="rp-meta">Literature review complete · experimental design in progress</p>
             <div class="rp-tags"><span>SMPL</span><span>HMR2.0</span><span>WHAM</span><span>Trajectory Prediction</span></div>
-            <a class="rp-link" href="reports/pgtp-net-report.pdf" target="_blank" rel="noopener">Read the report ↗</a>
+            <a class="rp-link" href="pgpt.pdf" target="_blank" rel="noopener">Read the report ↗</a>
           </div>
         </div>
         <div class="rp-card">
@@ -1068,7 +1070,7 @@
     <div class="wrap">
       <div class="contact-inner fade-in">
         <div class="eyebrow" style="justify-content:center;">Contact</div>
-        <h2>Let's build something that <span class="hl">moves</span>.</h2>
+        <h2 class="contact-big">Connect with <span class="hl">me</span></h2>
         <p>Open to Summer &amp; Fall 2026 robotics software, perception, and navigation internships / co-op — always happy to talk about SLAM, manipulation, or the occasional pneumatic gripper.</p>
         <div class="contact-links">
           <a href="mailto:lakariya.p@northeastern.edu" class="btn btn-primary">lakariya.p@northeastern.edu</a>
