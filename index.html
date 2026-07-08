@@ -258,6 +258,12 @@
   .proj-media-inner img, .proj-media-inner video{width:100%; height:100%; object-fit:cover; display:block;}
   .proj-media-inner.no-media{border-style:dashed;}
   .proj-media-inner.no-media::after{content:attr(data-label); font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.04em; color:var(--muted-dim); text-transform:uppercase; text-align:center; padding:0 18px; line-height:1.5;}
+  .proj-media-inner.yt{position:relative; padding:0; background:#000; border-style:solid; cursor:pointer;}
+  .proj-media-inner.yt img.yt-poster{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+  .proj-media-inner.yt iframe{position:absolute; inset:0; width:100%; height:100%; border:0; display:block;}
+  .proj-media-inner.yt .yt-play{position:relative; z-index:2; width:52px; height:52px; border-radius:50%; background:rgba(10,12,18,0.55); border:1.5px solid rgba(255,255,255,0.9); display:flex; align-items:center; justify-content:center; transition:transform .3s ease, background .3s ease;}
+  .proj-media-inner.yt .yt-play::after{content:''; width:0; height:0; margin-left:3px; border-style:solid; border-width:8px 0 8px 13px; border-color:transparent transparent transparent #fff;}
+  .proj-card:hover .proj-media-inner.yt .yt-play, .proj-card.open .proj-media-inner.yt .yt-play{transform:scale(1.08); background:rgba(75,50,224,0.72);}
 
   .proj-body{padding:18px 22px 18px; display:flex; flex-direction:column; flex:1;}
   .proj-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:11px;}
@@ -329,6 +335,48 @@
   .rp-link:hover{text-decoration:underline;}
   .rp-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;}
   .rp-tags span{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.03em; text-transform:uppercase; padding:3px 8px; border-radius:5px; background:var(--cyan-soft); color:var(--proj-tag-ink);}
+
+  /* ---------- Project media preview (click to open pop-out gallery) ---------- */
+  .proj-media-inner.gallery{position:relative; padding:0; background:#0b0e14; border-style:solid; cursor:pointer;}
+  .proj-media-inner.gallery img.pv, .proj-media-inner.gallery video.pv{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+  .proj-media-inner.gallery .pv-scrim{position:absolute; inset:0; background:linear-gradient(180deg, transparent 45%, rgba(6,8,12,0.55)); z-index:1;}
+  .proj-media-inner.gallery .pv-expand{position:absolute; top:9px; right:9px; z-index:3; display:flex; align-items:center; gap:5px; padding:5px 9px; border-radius:999px; background:rgba(8,10,16,0.6); border:1px solid rgba(255,255,255,0.28); color:#fff; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.04em;}
+  .proj-media-inner.gallery .pv-play{position:absolute; z-index:2; width:50px; height:50px; border-radius:50%; background:rgba(10,12,18,0.55); border:1.5px solid rgba(255,255,255,0.9); display:flex; align-items:center; justify-content:center; transition:transform .3s ease, background .3s ease;}
+  .proj-media-inner.gallery .pv-play::after{content:''; width:0; height:0; margin-left:3px; border-style:solid; border-width:8px 0 8px 13px; border-color:transparent transparent transparent #fff;}
+  .proj-card:hover .proj-media-inner.gallery .pv-play{transform:scale(1.08); background:rgba(75,50,224,0.72);}
+  .proj-media-inner.gallery.loading::after{content:'Loading…'; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted-dim);}
+
+  /* ---------- Lightbox pop-out gallery ---------- */
+  .lightbox{position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(6,8,14,0.86); backdrop-filter:blur(6px);}
+  .lightbox.open{display:flex;}
+  .lb-frame{position:relative; width:min(1040px, 92vw); max-height:86vh; display:flex; flex-direction:column; gap:14px;}
+  .lb-stage{position:relative; width:100%; aspect-ratio:16/9; max-height:74vh; background:#000; border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,0.14); display:flex; align-items:center; justify-content:center;}
+  .lb-stage img{width:100%; height:100%; object-fit:contain; background:#000;}
+  .lb-stage video{width:100%; height:100%; object-fit:contain; background:#000;}
+  .lb-stage iframe{width:100%; height:100%; border:0;}
+  .lb-close{position:absolute; top:-46px; right:0; width:38px; height:38px; border-radius:9px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.28); color:#fff; font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;}
+  .lb-close:hover{background:rgba(255,255,255,0.2);}
+  .lb-nav{position:absolute; top:50%; transform:translateY(-50%); width:46px; height:46px; border-radius:50%; background:rgba(10,12,18,0.6); border:1px solid rgba(255,255,255,0.3); color:#fff; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:4; transition:background .2s ease;}
+  .lb-nav:hover{background:rgba(75,50,224,0.8);}
+  .lb-prev{left:12px;} .lb-next{right:12px;}
+  .lb-frame.single .lb-nav{display:none;}
+  .lb-bar{display:flex; align-items:center; justify-content:space-between; gap:16px; color:#cfd6e6;}
+  .lb-count{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.05em;}
+  .lb-dots{display:flex; gap:7px; flex-wrap:wrap;}
+  .lb-dot{width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.3); border:0; cursor:pointer; padding:0;}
+  .lb-dot.active{background:var(--accent);}
+  .lb-cap{font-family:'JetBrains Mono',monospace; font-size:11px; color:#9aa7bc; letter-spacing:0.03em;}
+  .lb-frame.single .lb-dots{display:none;}
+  @media (max-width:600px){ .lb-close{top:-42px;} .lb-nav{width:40px; height:40px;} }
+
+  /* ---------- Education logos ---------- */
+  .edu-head{display:flex; align-items:center; gap:12px; margin-bottom:5px;}
+  .edu-head h3{margin:0; font-size:16.5px; font-weight:600;}
+  .edu-logo{width:40px; height:40px; flex:none; border-radius:9px; background:var(--panel); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; overflow:hidden; padding:4px;}
+  .edu-logo img{width:100%; height:100%; object-fit:contain; display:block;}
+  .award-img{position:absolute; inset:0; display:block;}
+  .award-img img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease;}
+  .award-card:hover .award-img img{transform:scale(1.05);}
 
   /* ---------- Certifications: cards tucked in a folder pocket ---------- */
   .cert-folder{position:relative; height:320px; cursor:pointer; user-select:none;}
@@ -498,23 +546,14 @@
       </div>
 
       <!--
-        HANDS-ON GALLERY — swap the src of each .lab-shot for photos of you working with robots/hardware.
-        Use your Wix media URLs or files in an /images folder. Empty slots show an "Add photo" label.
-        Duplicate a <div class="lab-shot">…</div> to add more.
+        HANDS-ON GALLERY — filled from the GALLERIES.intro list in the script (bottom of file).
+        Click any tile to open the full pop-out gallery. To change/add images, edit GALLERIES.intro.
       -->
       <div class="lab-gallery">
-        <div class="lab-shot big" data-label="Add photo — in the lab">
-          <img src="images/fieldwork.jpg" alt="Fieldwork and lab testing" loading="lazy" onerror="this.style.display='none'; this.closest('.lab-shot').classList.add('no-img');">
-        </div>
-        <div class="lab-shot wide no-img" data-label="Add wide photo — team / competition">
-          <!-- <img src="images/team.jpg" alt="Team" loading="lazy"> -->
-        </div>
-        <div class="lab-shot no-img" data-label="Add photo — with a robot">
-          <!-- <img src="images/with-robot.jpg" alt="With a robot" loading="lazy"> -->
-        </div>
-        <div class="lab-shot no-img" data-label="Add photo — hardware">
-          <!-- <img src="images/hardware.jpg" alt="Working with hardware" loading="lazy"> -->
-        </div>
+        <div class="lab-shot big"  data-gallery="intro" data-index="0" data-label="Loading…"></div>
+        <div class="lab-shot wide" data-gallery="intro" data-index="1" data-label="Loading…"></div>
+        <div class="lab-shot"      data-gallery="intro" data-index="2" data-label="Loading…"></div>
+        <div class="lab-shot"      data-gallery="intro" data-index="3" data-label="Loading…"></div>
       </div>
     </div>
   </section>
@@ -589,12 +628,12 @@
       </div>
 
       <!--
-        HOW TO ADD A PROJECT PHOTO OR VIDEO
-        Each card has a <div class="proj-media-inner no-media" ...> that slides up on hover.
-        To drop media in, replace that div's contents and remove the "no-media" class:
-          IMAGE →  <div class="proj-media-inner"><img src="images/drone-slam.jpg" alt="Drone SLAM demo"></div>
-          VIDEO →  <div class="proj-media-inner"><video src="videos/drone-slam.mp4" muted loop playsinline autoplay></video></div>
-        Use your Wix media URLs, a YouTube thumbnail, or files committed to /images and /videos.
+        HOW TO ADD PROJECT MEDIA
+        The drawer slides up to show a preview; clicking it opens a big pop-out gallery
+        (swipe / arrows / keyboard) that plays images, videos, and YouTube embeds.
+        To give a card media: set <div class="proj-media-inner gallery" data-gallery="KEY"></div>
+        and add a KEY entry to the GALLERIES object in the script at the bottom of this file.
+        Each item is { t:'img'|'vid'|'yt', s:'path-or-youtube-id', cap:'caption' }.
       -->
       <div class="proj-grid fade-in" id="projGrid">
 
@@ -628,7 +667,7 @@
 
         <article class="proj-card" data-tags="perception navigation">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — Flipkart GRiD 2023"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="flipkart"></div></div>
           <div class="proj-body">
             <div class="proj-top"><h3>Multi-Robot Warehouse Automation — Flipkart GRiD 2023</h3></div>
             <div class="proj-tags"><span class="proj-tag">ESP32</span><span class="proj-tag">Image Processing</span><span class="proj-tag">Multi-Robot</span><span class="proj-tag">Central Dashboard</span></div>
@@ -664,7 +703,7 @@
 
         <article class="proj-card" data-tags="perception">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — Structure-from-Motion"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="sfm"></div></div>
           <div class="proj-body">
             <div class="proj-top">
               <h3>3D Scene Reconstruction via Structure-from-Motion</h3>
@@ -678,7 +717,7 @@
 
         <article class="proj-card" data-tags="manipulation">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — UR5"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="ur5"></div></div>
           <div class="proj-body">
             <div class="proj-top">
               <h3>Kinematic Modeling &amp; Trajectory Tracking — UR5</h3>
@@ -692,7 +731,7 @@
 
         <article class="proj-card" data-tags="mechanical manipulation">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — Stewart Platform"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="stewart"></div></div>
           <div class="proj-body">
             <div class="proj-top">
               <h3>Stewart Platform for Telescope Positioning</h3>
@@ -728,7 +767,7 @@
 
         <article class="proj-card" data-tags="mechanical">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — Obstacle Detection Drone"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="obstacle"></div></div>
           <div class="proj-body">
             <div class="proj-top"><h3>Obstacle Detection Drone</h3></div>
             <div class="proj-tags"><span class="proj-tag">Arduino</span><span class="proj-tag">UAV</span><span class="proj-tag">Ultrasonic</span></div>
@@ -739,7 +778,7 @@
 
         <article class="proj-card" data-tags="mechanical">
           <div class="proj-flap"></div>
-          <div class="proj-media"><div class="proj-media-inner no-media" data-label="Add image / video — Line Follower"></div></div>
+          <div class="proj-media"><div class="proj-media-inner gallery" data-gallery="linefollower"></div></div>
           <div class="proj-body">
             <div class="proj-top"><h3>Line Follower Robot — Mini Challenge (Facilitator)</h3></div>
             <div class="proj-tags"><span class="proj-tag">Teaching</span><span class="proj-tag">Electronics</span><span class="proj-tag">Sensors</span></div>
@@ -820,19 +859,22 @@
         <div class="eyebrow">Education</div>
         <h2 class="section-title" style="margin-bottom:26px;">Academic <span class="hl">background</span>.</h2>
         <div class="edu-item">
-          <h3>Northeastern University</h3>
-          <div class="deg">MS, Robotics — Concentration in ECE</div>
-          <div class="date">Sep 2025 – May 2027</div>
+          <div class="edu-head">
+            <span class="edu-logo" data-img="images/neulogo" data-alt="Northeastern University"></span>
+            <h3>Northeastern University</h3>
+          </div>
+          <div class="deg">Master of Science in Robotics — Concentration in ECE</div>
+          <div class="date">Sep 2025 – May 2027 · GPA 3.86 / 4.0</div>
           <p>Relevant coursework: Mobile Robotics, Robot Mechanics &amp; Control, Robot Sensing &amp; Navigation, Computer Vision.</p>
         </div>
         <div class="edu-item">
-          <h3>Savitribai Phule Pune University</h3>
-          <div class="deg">BE, Mechanical Engineering — Honours, Robotics</div>
-          <div class="date">Sep 2019 – Jul 2023</div>
+          <div class="edu-head">
+            <span class="edu-logo" data-img="images/sppu" data-alt="Savitribai Phule Pune University"></span>
+            <h3>Savitribai Phule Pune University</h3>
+          </div>
+          <div class="deg">Bachelor of Engineering in Mechanical — Honours, Robotics</div>
+          <div class="date">Sep 2019 – Jul 2023 · GPA 3.5 / 4.0</div>
           <p>Relevant coursework: Design of Machine Elements, Mechatronics, CAE, Design of Transmission Systems.</p>
-        </div>
-        <div class="edu-photo no-img" data-label="Add photo — campus / convocation">
-          <!-- <img src="images/campus.jpg" alt="Campus / convocation" loading="lazy"> -->
         </div>
       </div>
       <div class="fade-in">
@@ -951,7 +993,7 @@
 
         <div class="award-card">
           <div class="award-photo" data-label="Add photo — RoboCon 2021">
-            <img src="images/robocon-2021.jpg" alt="RoboCon India 2021 — Team Anonymous" loading="lazy" onerror="this.style.display='none'; this.closest('.award-photo').classList.add('no-img');">
+            <span class="award-img" data-img="images/robocon" data-alt="RoboCon India 2021 — Team Anonymous"></span>
           </div>
           <div class="award-body">
             <h3>All-India Rank 16 — RoboCon India Finalist</h3>
@@ -984,7 +1026,7 @@
 
         <div class="award-card">
           <div class="award-photo" data-label="Add trophy photo — Ideal AIESECer">
-            <img src="images/aiesec-best-team-leader-2022.jpg" alt="Ideal AIESECer — Best Team Leader" loading="lazy" onerror="this.style.display='none'; this.closest('.award-photo').classList.add('no-img');">
+            <img src="images/aiesec-award.jpg" alt="Ideal AIESECer — Best Team Leader" loading="lazy" onerror="this.style.display='none'; this.closest('.award-photo').classList.add('no-img');">
           </div>
           <div class="award-body">
             <h3>Ideal AIESECer — Best Team Leader</h3>
@@ -1056,6 +1098,21 @@
   </footer>
 
 </main>
+
+  <!-- ================= LIGHTBOX (pop-out gallery) ================= -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project gallery">
+    <div class="lb-frame" id="lbFrame">
+      <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+      <div class="lb-stage" id="lbStage"></div>
+      <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">&#8249;</button>
+      <button class="lb-nav lb-next" id="lbNext" aria-label="Next">&#8250;</button>
+      <div class="lb-bar">
+        <span class="lb-count" id="lbCount"></span>
+        <span class="lb-cap" id="lbCap"></span>
+        <div class="lb-dots" id="lbDots"></div>
+      </div>
+    </div>
+  </div>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -1135,15 +1192,181 @@
     });
   }
 
-  // ---------- Touch: tap a project card to reveal its media drawer ----------
-  if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+  // ---------- Media galleries + pop-out lightbox ----------
+  // Edit these lists to change what each project (and the intro) shows.
+  // t: 'img' (images/…), 'vid' (videos/…), 'yt' (YouTube id). Spaces/parens in filenames
+  // are URL-encoded (%20 = space, %28 %29 = parentheses). Image extensions auto-resolve.
+  const GALLERIES = {
+    intro: [
+      { t:'img', s:'images/Mass-Robotics', cap:'Mass Robotics' },
+      { t:'img', s:'images/Qualcomm.jpeg', cap:'Qualcomm' },
+      { t:'img', s:'images/image.png',     cap:'' },
+      { t:'img', s:'images/bostondy.jpeg', cap:'Boston' }
+    ],
+    flipkart:     [ { t:'yt', s:'kUKNIRWzeSI', cap:'Flipkart GRiD 2023' } ],
+    ur5:          [ { t:'yt', s:'6-ZP9ciBk3w', cap:'UR5 kinematics' } ],
+    stewart:      [ { t:'yt', s:'ell-3qGeZwA', cap:'Stewart platform' } ],
+    sfm: [
+      { t:'img', s:'images/inlier.png',                        cap:'Inlier matches (RANSAC)' },
+      { t:'img', s:'images/matplotlib.png',                    cap:'Reprojection / reconstruction plot' },
+      { t:'vid', s:'videos/derivative_result%20%281%29.mp4',   cap:'Derivative result' },
+      { t:'vid', s:'videos/meshlab.mp4',                       cap:'MeshLab reconstruction' }
+    ],
+    linefollower: [
+      { t:'img', s:'images/facilitator1.jpeg', cap:'Facilitation' },
+      { t:'img', s:'images/facilitator2.jpeg', cap:'Facilitation' },
+      { t:'img', s:'images/facilitator3.jpeg', cap:'Facilitation' },
+      { t:'img', s:'images/RoboRace',          cap:'RoboRace' }
+    ],
+    obstacle:     [ { t:'vid', s:'videos/Obstacle%20sensor%20checking.mp4', cap:'Obstacle sensing' } ]
+  };
+
+  // Smart <img>: tries the given path, then common extensions, then reports failure.
+  const IMG_EXTS = ['', '.jpg', '.jpeg', '.png', '.JPG', '.PNG', '.webp'];
+  function smartImg(base, cls, alt, onFail){
+    const img = document.createElement('img');
+    if (cls) img.className = cls;
+    img.alt = alt || '';
+    img.loading = 'lazy';
+    let i = 0;
+    img.addEventListener('error', function next(){
+      if (i >= IMG_EXTS.length){ if (onFail) onFail(); return; }
+      img.src = base + IMG_EXTS[i++];
+    });
+    img.src = base + IMG_EXTS[i++];
+    return img;
+  }
+
+  // Fill static [data-img] slots (logos, RoboCon award)
+  document.querySelectorAll('[data-img]').forEach(el => {
+    const base = el.getAttribute('data-img');
+    const alt  = el.getAttribute('data-alt') || '';
+    const img = smartImg(base, '', alt, () => {
+      const award = el.closest('.award-photo');
+      if (award) award.classList.add('no-img');
+      el.style.display = 'none';
+    });
+    el.appendChild(img);
+  });
+
+  function ytThumb(id){ return 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg'; }
+
+  // Build the preview shown inside each project's media drawer
+  function buildPreview(el, key){
+    const items = GALLERIES[key];
+    if (!items || !items.length){ el.classList.add('no-media'); return; }
+    const first = items[0];
+    el.innerHTML = '';
+    const scrim = document.createElement('div'); scrim.className = 'pv-scrim';
+    if (first.t === 'img'){
+      el.appendChild(smartImg(first.s, 'pv', first.cap, () => { el.classList.add('no-media'); el.setAttribute('data-label','Add image'); }));
+    } else if (first.t === 'vid'){
+      const v = document.createElement('video'); v.className = 'pv'; v.muted = true; v.playsInline = true;
+      v.preload = 'metadata'; v.src = first.s + '#t=0.1'; el.appendChild(v);
+    } else if (first.t === 'yt'){
+      const im = document.createElement('img'); im.className = 'pv'; im.alt = first.cap || 'Video'; im.loading = 'lazy';
+      im.src = ytThumb(first.s); el.appendChild(im);
+    }
+    el.appendChild(scrim);
+    if (first.t === 'vid' || first.t === 'yt'){
+      const play = document.createElement('span'); play.className = 'pv-play'; el.appendChild(play);
+    }
+    const badge = document.createElement('div'); badge.className = 'pv-expand';
+    badge.textContent = items.length > 1 ? ('⤢  ' + items.length + ' items') : '⤢  view';
+    el.appendChild(badge);
+  }
+
+  document.querySelectorAll('.proj-media-inner.gallery[data-gallery]').forEach(el => {
+    buildPreview(el, el.getAttribute('data-gallery'));
+    el.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(el.getAttribute('data-gallery'), 0); });
+  });
+
+  // Touch: tap a project card to reveal its drawer (desktop reveals on hover)
+  if (window.matchMedia && window.matchMedia('(hover: none)').matches){
     document.querySelectorAll('.proj-card').forEach(card => {
       card.addEventListener('click', (e) => {
-        if (e.target.closest('a')) return;
+        if (e.target.closest('a') || e.target.closest('.proj-media-inner')) return;
         card.classList.toggle('open');
       });
     });
   }
+
+  // ----- Lightbox -----
+  const lb = document.getElementById('lightbox');
+  const lbStage = document.getElementById('lbStage');
+  const lbFrame = document.getElementById('lbFrame');
+  const lbCount = document.getElementById('lbCount');
+  const lbCap = document.getElementById('lbCap');
+  const lbDots = document.getElementById('lbDots');
+  let lbItems = [], lbIdx = 0;
+
+  function lbRender(){
+    const it = lbItems[lbIdx];
+    lbStage.innerHTML = '';
+    if (it.t === 'img'){
+      lbStage.appendChild(smartImg(it.s, '', it.cap, () => { lbStage.innerHTML = '<div style="color:#9aa7bc;font-family:monospace;font-size:12px">Image not found — check the filename/extension in the repo.</div>'; }));
+    } else if (it.t === 'vid'){
+      const v = document.createElement('video'); v.src = it.s; v.controls = true; v.autoplay = true; v.playsInline = true;
+      lbStage.appendChild(v);
+    } else if (it.t === 'yt'){
+      const f = document.createElement('iframe');
+      f.src = 'https://www.youtube.com/embed/' + it.s + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true; lbStage.appendChild(f);
+    }
+    lbCount.textContent = (lbIdx + 1) + ' / ' + lbItems.length;
+    lbCap.textContent = it.cap || '';
+    lbDots.querySelectorAll('.lb-dot').forEach((d, i) => d.classList.toggle('active', i === lbIdx));
+  }
+  function lbGo(n){ lbIdx = (n + lbItems.length) % lbItems.length; lbRender(); }
+  function openLightbox(key, idx){
+    lbItems = GALLERIES[key] || [];
+    if (!lbItems.length) return;
+    lbIdx = idx || 0;
+    lbFrame.classList.toggle('single', lbItems.length <= 1);
+    lbDots.innerHTML = '';
+    lbItems.forEach((_, i) => {
+      const d = document.createElement('button'); d.className = 'lb-dot'; d.setAttribute('aria-label', 'Go to item ' + (i+1));
+      d.addEventListener('click', () => lbGo(i)); lbDots.appendChild(d);
+    });
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lbRender();
+  }
+  function closeLightbox(){ lb.classList.remove('open'); lbStage.innerHTML = ''; document.body.style.overflow = ''; }
+
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lbPrev').addEventListener('click', () => lbGo(lbIdx - 1));
+  document.getElementById('lbNext').addEventListener('click', () => lbGo(lbIdx + 1));
+  lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    else if (e.key === 'ArrowLeft') lbGo(lbIdx - 1);
+    else if (e.key === 'ArrowRight') lbGo(lbIdx + 1);
+  });
+  // touch swipe within the stage
+  let tsx = 0;
+  lbStage.addEventListener('touchstart', (e) => { tsx = e.touches[0].clientX; }, { passive: true });
+  lbStage.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - tsx;
+    if (Math.abs(dx) > 45) lbGo(lbIdx + (dx < 0 ? 1 : -1));
+  });
+
+  // Intro gallery tiles -> open the intro lightbox
+  document.querySelectorAll('.lab-shot[data-gallery]').forEach(tile => {
+    const key = tile.getAttribute('data-gallery');
+    const idx = parseInt(tile.getAttribute('data-index') || '0', 10);
+    const item = (GALLERIES[key] || [])[idx];
+    tile.classList.remove('no-img');
+    if (item && item.t === 'img'){
+      tile.appendChild(smartImg(item.s, '', item.cap, () => { tile.classList.add('no-img'); tile.setAttribute('data-label','Add photo'); }));
+    } else {
+      tile.classList.add('no-img'); tile.setAttribute('data-label','Add photo');
+    }
+    tile.style.cursor = 'pointer';
+    tile.addEventListener('click', () => openLightbox(key, idx));
+  });
 
   // ---------- Project filter ----------
   const chips = document.querySelectorAll('.filter-chip');
@@ -1388,6 +1611,5 @@
     if (reduceMotion) { frame(0); } else { requestAnimationFrame(frame); }
   })();
 </script>
-
 </body>
 </html>
